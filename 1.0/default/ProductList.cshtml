@@ -1,0 +1,65 @@
+﻿@inherits RocketCatalog.Components.RocketCatalogTokens<Simplisity.SimplisityRazor>
+@using DNNrocketAPI;
+@using Simplisity;
+@using RocketPortal.Components;
+@using RocketCatalog.Components;
+@using DNNrocketAPI.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketCatalog/App_LocalResources/")
+
+@{
+
+    var sessionParams = (SessionParams)Model.SessionParamsData;
+    var articleDataList = (ArticleLimpetList)Model.GetDataObject("articlelist");
+    var portalCatalog = (PortalCatalogLimpet)Model.GetDataObject("portalcatalog");
+    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
+    var portalData = (PortalLimpet)Model.GetDataObject("portaldata");
+    var categoryList = (CategoryLimpetList)Model.GetDataObject("categorylist");
+    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
+
+    @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/resx/")
+}
+
+@RenderTemplate("SearchBanner.cshtml", appTheme, Model, true)
+
+
+@RenderTemplate("CategoryBar.cshtml", appTheme, Model, true)
+
+<div class="w3-row w3-grayscale">
+
+
+    @foreach (ArticleLimpet articleData in articleDataList.GetArticleList())
+    {
+        var imgRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+        var articleImage = articleData.GetImage(0);
+        if (articleImage != null)
+        {
+            imgRelPath = articleImage.RelPath;
+        }
+        var articleListUrl = articleData.ArticleDetailUrl(sessionParams);
+
+        <div class="w3-col l3 m4 s6">
+            <div class="w3-container w3-padding">
+                <a href="@articleListUrl" style="text-decoration: none;">
+                    <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, imgRelPath, 400, 500)" style="width:100%">
+                    <div style="height: 100px;">
+                        <p>@articleData.Name<br><b>@articleData.Info.GetXmlPropertyDecimal("genxml/textbox/price")</b></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
+    }
+
+</div>
+
+
+@RenderTemplate("ProductPaging.cshtml", appTheme, Model, true)
+
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

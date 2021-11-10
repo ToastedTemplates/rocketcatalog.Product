@@ -9,40 +9,44 @@
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketCatalog/App_LocalResources/")
 
 @{
+
     var sessionParams = (SessionParams)Model.SessionParamsData;
+    var articleData = (ArticleLimpet)Model.GetDataObject("articledata");
     var portalCatalog = (PortalCatalogLimpet)Model.GetDataObject("portalcatalog");
     var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
     var portalData = (PortalLimpet)Model.GetDataObject("portaldata");
+    var categoryList = (CategoryLimpetList)Model.GetDataObject("categorylist");
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
+
 
     @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/resx/")
 }
 
-<div class="w3-xlarge w3-border-bottom w3-border-right w3-padding" style="height:51px;">
-    @portalData.Name
-</div>
+@RenderTemplate("CategoryBar.cshtml", appTheme, Model, true)
 
-<div id="catalog-tag@(Model.DataRef)">
+<div onclick="window.history.back()" class="w3-button w3-margin">@ButtonText(ButtonTypes.back, sessionParams.CultureCode)</div>
+
+<div class="w3-row w3-grayscale">
 
     @{
-
-        var articleData = (ArticleLimpet)Model.GetDataObject("articledata");
-        if (articleData != null)
+        var imgRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+        var articleImage = articleData.GetImage(0);
+        if (articleImage != null)
         {
-            @RenderTemplate("ProductDetail.cshtml", appTheme, Model, true)
+            imgRelPath = articleImage.RelPath;
         }
-        else
-        {
-            @RenderTemplate("ProductList.cshtml", appTheme, Model, true)
-        }
-        @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
     }
 
-</div>
+    <div class="w3-col l4 s8">
+        <div class="w3-container">
+            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, imgRelPath, 400, 500)" style="width:100%">
+            <p>@articleData.Name<br><b>@articleData.Info.GetXmlPropertyDecimal("genxml/textbox/price")</b></p>
+        </div>
+    </div>
 
+</div>
 
 <script>
     $(document).ready(function () {
-        $('#catalog-tag@(Model.DataRef)').activateSimplisityPanel('@sessionParams.ApiUrl')
     });
 </script>

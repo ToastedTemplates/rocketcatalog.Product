@@ -9,40 +9,34 @@
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketCatalog/App_LocalResources/")
 
 @{
+
     var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalCatalog = (PortalCatalogLimpet)Model.GetDataObject("portalcatalog");
     var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
     var portalData = (PortalLimpet)Model.GetDataObject("portaldata");
+    var categoryList = (CategoryLimpetList)Model.GetDataObject("categorylist");
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
+
 
     @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/resx/")
 }
 
-<div class="w3-xlarge w3-border-bottom w3-border-right w3-padding" style="height:51px;">
-    @portalData.Name
-</div>
-
-<div id="catalog-tag@(Model.DataRef)">
+<div class="w3-bar w3-margin-bottom">
 
     @{
-
-        var articleData = (ArticleLimpet)Model.GetDataObject("articledata");
-        if (articleData != null)
+        var catcolor = "";
+    }
+    @foreach (CategoryLimpet c in categoryList.GetCategoryList())
+    {
+        if (sessionParams.GetInt("catid") == c.CategoryId)
         {
-            @RenderTemplate("ProductDetail.cshtml", appTheme, Model, true)
+            catcolor = " w3-theme-dark ";
         }
         else
         {
-            @RenderTemplate("ProductList.cshtml", appTheme, Model, true)
+            catcolor = "";
         }
-        @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
+        <a href="@(c.CategoryUrl(sessionParams))" class="w3-bar-item @(catcolor) w3-button w3-text-black w3-padding-large w3-hover-theme" style="text-decoration: none;">@c.Name</a>
     }
 
 </div>
-
-
-<script>
-    $(document).ready(function () {
-        $('#catalog-tag@(Model.DataRef)').activateSimplisityPanel('@sessionParams.ApiUrl')
-    });
-</script>
