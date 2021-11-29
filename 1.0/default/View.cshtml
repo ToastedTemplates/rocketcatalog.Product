@@ -1,31 +1,11 @@
 ﻿@inherits RocketCatalog.Components.RocketCatalogTokens<Simplisity.SimplisityRazor>
-@using DNNrocketAPI;
-@using Simplisity;
-@using RocketPortal.Components;
 @using RocketCatalog.Components;
 @using DNNrocketAPI.Components;
 
-@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
-@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketCatalog/App_LocalResources/")
-
-@{
-    var sessionParams = (SessionParams)Model.SessionParamsData;
-    var portalCatalog = (PortalCatalogLimpet)Model.GetDataObject("portalcatalog");
-    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
-    var portalData = (PortalLimpet)Model.GetDataObject("portaldata");
-    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
-
-    @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/resx/")
-}
-
-<div class="w3-xlarge w3-border-bottom w3-border-right w3-padding" style="height:51px;">
-    @portalData.Name
-</div>
-
-<div id="catalog-tag@(Model.DataRef)">
-
+<!-- !PAGE CONTENT! -->
+<div id="ecommerce-tag" class="ecommerce-container">
     @{
-
+        var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
         var articleData = (ArticleLimpet)Model.GetDataObject("articledata");
         if (articleData != null)
         {
@@ -35,14 +15,6 @@
         {
             @RenderTemplate("ProductList.cshtml", appTheme, Model, true)
         }
-        @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
     }
-
 </div>
-
-
-<script>
-    $(document).ready(function () {
-        $('#catalog-tag@(Model.DataRef)').activateSimplisityPanel('@sessionParams.ApiUrl')
-    });
-</script>
+<div class="w3-overlay simplisity_loader" style="z-index:999;"></div>

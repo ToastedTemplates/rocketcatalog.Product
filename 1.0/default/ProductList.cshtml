@@ -17,11 +17,12 @@
     var portalData = (PortalLimpet)Model.GetDataObject("portaldata");
     var categoryList = (CategoryLimpetList)Model.GetDataObject("categorylist");
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
+    var appThemeDefault = (AppThemeLimpet)Model.GetDataObject("appthemedefault");
 
     @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + appTheme.AppThemeFolder + "/" + appTheme.AppVersionFolder + "/resx/")
 }
 
-@RenderTemplate("SearchBanner.cshtml", appTheme, Model, true)
+@RenderTemplate("SearchBanner.cshtml", appThemeDefault, Model, true)
 
 
 @RenderTemplate("CategoryBar.cshtml", appTheme, Model, true)
@@ -56,7 +57,7 @@
 </div>
 
 
-@RenderTemplate("ProductPaging.cshtml", appTheme, Model, true)
+@RenderTemplate("ProductPaging.cshtml", appThemeDefault, Model, true)
 
 
 <script>
